@@ -18,12 +18,20 @@ window.onload = function(){
     document.getElementById("login-page")
     .style.display = "none";
 
+    document.getElementById("app")
+    .style.display = "block";
+
     atualizarHome();
 
     renderAlunos();
 
     renderOc();
-  }
+  } else{
+
+    document.getElementById("app")
+    .style.display = "none"
+
+   }
 
 };
 
@@ -43,6 +51,9 @@ function entrar(){
 
     document.getElementById("login-page")
     .style.display = "none";
+
+    document.getElementById("app")
+    .style.display = "block";
 
     atualizarHome();
 
@@ -64,6 +75,9 @@ function sair(){
 
   document.getElementById("login-page")
   .style.display = "flex";
+  
+  document.getElementById("app")
+  .style.display = "none";
 
 }
 
@@ -123,26 +137,35 @@ function addAluno(){
   document.getElementById("nome")
   .value.trim();
 
+  const serie =
+  document.getElementById(serie)
+  .value;
+
   const nota =
   parseFloat(
     document.getElementById("nota").value
   );
 
-  if(!nome || isNaN(nota)){
+  if(!nome || !serie || isNaN(nota)){
 
-    alert("Dados inválidos!");
+    alert("Preencha todos os campos!");
 
     return;
   }
 
   alunos.push({
     nome,
+    serie,
     nota
   });
 
   salvar();
 
   renderAlunos();
+
+  document.getElementById("nome").value = "";
+  document.getElementById("serie").value = "";
+  document.getElementById("nota").value = "";
 
 }
 
@@ -165,6 +188,8 @@ function renderAlunos(){
 
       <td>${a.nome}</td>
 
+      <td>${a.serie || "-"}</td>
+
       <td>${a.nota}</td>
 
       <td>
@@ -184,8 +209,9 @@ function renderAlunos(){
 
 function renderGrafico(turmaSelecionada = null){
 
-  const canvas =
-  document.getElementById("chart");
+  const canvas = turmaSelecionada
+  ? document.getElementById("chartTurma")
+  : document.getElementById("chartHome2");
 
   if(chartObj){
     chartObj.destroy();
@@ -232,8 +258,8 @@ function renderGrafico(turmaSelecionada = null){
         backgroundColor:
         alunosGrafico.map(a=>
           a.nota >= 6
-          ? "rgba(79,70,229,0.7)"
-          : "rgba(239,68,68,0.7)"
+          ? "rgba(255,255,255,0.7)"
+          : "rgba(255,99,132,0.8)"
         ),
 
         borderRadius:8
@@ -258,11 +284,29 @@ function renderGrafico(turmaSelecionada = null){
 
       scales:{
 
+        x:{
+          ticks:{
+            color:"#fff"
+          },
+      
+          grid:{
+            display:false
+          }
+        },
+      
         y:{
           min:0,
-          max:10
+          max:10,
+      
+          ticks:{
+            color:"#fff"
+          },
+      
+          grid:{
+            color:"rgba(255,255,255,0.1)"
+          }
         }
-
+      
       }
 
     }
@@ -299,6 +343,8 @@ function addOc(){
 
   renderOc();
 
+  document.getElementById("alunoOc").value = "";
+  document.getElementById("textoOc").value = "";
 }
 
 function renderOc(){
@@ -325,6 +371,40 @@ function renderOc(){
   });
 
   atualizarHome();
+
+  // MOSTRAR ÚLTIMAS OCORRÊNCIAS
+
+const recentes =
+ocorrencias.slice(-3).reverse();
+
+const box =
+document.getElementById("ocorrenciasRecentes");
+
+if(box){
+
+  box.innerHTML = "";
+
+  if(recentes.length === 0){
+
+    box.innerHTML =
+    "<p>Nenhuma ocorrência registrada.</p>";
+
+  } else {
+
+    recentes.forEach(o=>{
+
+      box.innerHTML += `
+        <div class="oc-mini">
+          <strong>${o.aluno}</strong>
+          <span>${o.texto}</span>
+        </div>
+      `;
+
+    });
+
+  }
+
+}
 
 }
 
@@ -377,7 +457,7 @@ const dadosTurmas = {
   /* ABRIR TURMA */
   
   function abrirTurma(nomeTurma){
-  
+
     irPara("alunosTurma");
   
     document
@@ -425,8 +505,270 @@ const dadosTurmas = {
   
     });
   
+    // =========================
+    // ESTATÍSTICAS DA TURMA
+    // =========================
+  
+    const notas =
+    alunos.map(a => a.nota);
+  
+    const media =
+    (
+      notas.reduce((a,b)=>a+b,0)
+      / notas.length
+    ).toFixed(1);
+  
+    const maior =
+    Math.max(...notas).toFixed(1);
+  
+    const menor =
+    Math.min(...notas).toFixed(1);
+  
+    document
+    .getElementById("mediaTurmaCard")
+    .textContent = media;
+  
+    document
+    .getElementById("maiorNota")
+    .textContent = maior;
+  
+    document
+    .getElementById("menorNota")
+    .textContent = menor;
+  
     renderGrafico(nomeTurma);
+  
   }
 
-  
-  
+// =========================
+// GRÁFICO GERAL DAS TURMAS
+// =========================
+
+const ctxHome =
+document.getElementById("chartHome");
+
+if(ctxHome){
+
+  new Chart(ctxHome,{
+
+    type:"line",
+
+    data:{
+
+      labels:[
+        "1º Bimestre",
+        "2º Bimestre",
+        "3º Bimestre",
+        "4º Bimestre"
+      ],
+
+      datasets:[
+
+        {
+          label:"3º Ano A",
+
+          data:[7.5,8.2,8.0,9.0],
+
+          borderColor:"#ffffff",
+
+          backgroundColor:"rgba(255,255,255,0.2)",
+
+          tension:0.4,
+
+          fill:false,
+
+          pointRadius:4
+        },
+
+        {
+          label:"2º Ano B",
+
+          data:[6.8,7.1,7.4,7.9],
+
+          borderColor:"#c4b5fd",
+
+          tension:0.4,
+
+          fill:false,
+
+          pointRadius:4
+        },
+
+        {
+          label:"1º Ano C",
+
+          data:[5.9,6.8,7.0,7.3],
+
+          borderColor:"#ddd6fe",
+
+          tension:0.4,
+
+          fill:false,
+
+          pointRadius:4
+        },
+
+        {
+          label:"9º Ano D",
+
+          data:[7.2,8.0,8.5,9.1],
+
+          borderColor:"#a78bfa",
+
+          tension:0.4,
+
+          fill:false,
+
+          pointRadius:4
+        }
+
+      ]
+
+    },
+
+    options:{
+
+      responsive:true,
+
+      maintainAspectRatio:false,
+
+      plugins:{
+
+        legend:{
+          labels:{
+            color:"#fff"
+          }
+        }
+
+      },
+
+      scales:{
+
+        x:{
+          ticks:{
+            color:"#fff"
+          },
+
+          grid:{
+            display:false
+          }
+        },
+
+        y:{
+          min:0,
+          max:10,
+
+          ticks:{
+            color:"#fff"
+          },
+
+          grid:{
+            color:"rgba(255,255,255,0.1)"
+          }
+        }
+
+      }
+
+    }
+
+  });
+
+}
+
+// =========================
+// SEGUNDO GRÁFICO GERAL
+// =========================
+
+const ctxHome2 =
+document
+.getElementById("chartHome2");
+
+if(ctxHome2){
+
+  new Chart(ctxHome2,{
+
+    type:"bar",
+
+    data:{
+
+      labels:[
+        "3º Ano A",
+        "2º Ano B",
+        "1º Ano C",
+        "9º Ano D"
+      ],
+
+      datasets:[{
+
+        label:"Médias das turmas",
+
+        data:[
+          8.2,
+          7.1,
+          6.8,
+          9.0
+        ],
+
+        backgroundColor:[
+          "#7c3aed",
+          "#8b5cf6",
+          "#a78bfa",
+          "#c4b5fd"
+        ],
+
+        borderRadius: 12,
+        borderSkipped: false,
+        maxBarThickness: 80
+
+      }]
+
+    },
+
+    options:{
+
+      responsive:true,
+
+      plugins:{
+
+        legend:{
+          display:false
+        },
+
+        tooltip:{
+          backgroundColor:"#111827",
+          padding:12,
+          titleColor:"#fff",
+          bodyColor:"#fff"
+        }
+
+      },
+
+      scales:{
+
+        y:{
+
+          beginAtZero:true,
+
+          max:10,
+
+          ticks:{
+            stepSize:1
+          },
+        
+          grid:{
+            color:"rgba(0,0,0,0.05)"
+          }
+          
+
+        }
+
+      },
+
+      animation:{
+        duration:1500
+      },
+    }
+
+  });
+
+}

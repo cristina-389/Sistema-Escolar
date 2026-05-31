@@ -71,15 +71,13 @@
       Entrar
     </button>
 
-    <div class="login-hint">
-      Usuário: professor · Senha: 1234
-    </div>
 
   </div>
 
 </div>
 
-<!-- SIDEBAR -->
+<div id="app">
+  <!-- SIDEBAR -->
 <aside class="sidebar">
 
   <div class="sidebar-logo">
@@ -140,23 +138,33 @@
 
   <div class="sidebar-footer">
 
-    <button
-      class="sair-btn"
-      onclick="sair()"
-    >
-      ↩ Sair da conta
+    <div class="user-card">
+  
+      <div class="user-avatar">
+        <img src="imagens/professor.png" alt="Professor">
+      </div>
+  
+      <div class="user-info">
+        <h4>Professor</h4>
+        <p>Bem-vindo de volta!</p>
+      </div>
+  
+    </div>
+  
+    <button class="logout-card" onclick="sair()">
+  
+      <span class="logout-icon">↪</span>
+  
+      <span>Sair da conta</span>
+  
     </button>
-
+  
   </div>
 
 </aside>
 
 <!-- TOPBAR -->
 <div class="topbar">
-
-  <span class="topbar-bell">
-    🔔
-  </span>
 
   <div class="topbar-user">
 
@@ -183,80 +191,135 @@
   <!-- HOME -->
   <div id="home" class="tela ativa">
 
-    <div class="welcome-bar">
-
-      <div
-        class="welcome-avatar"
-        id="home-avatar"
-      >
-        PR
+    <!-- TOPO -->
+    <div class="dashboard-top">
+  
+      <div>
+        <h1>Olá, Professor! 👋</h1>
+        <p>Seja bem-vindo ao seu painel de controle.</p>
       </div>
-
-      <div class="welcome-info">
-
-        <h3>
-          Olá,
-          <span id="home-name">
-            Professor
-          </span>
-        </h3>
-
-        <p>
-          Sistema Escolar · Painel Geral
-        </p>
-
+  
+      <div class="top-actions">
+  
+        <div class="notif">
+          🔔
+        </div>
+  
       </div>
-
+  
     </div>
-
+  
     <!-- CARDS -->
-    <div class="home-grid">
+    <div class="dashboard-cards">
+  
+      <div class="modern-card green ocorrencia-card">
 
-      <div class="stat-card">
+  <div class="card-icon">⚠️</div>
 
-        <div
-          class="num"
-          id="home-total"
-        >
-          0
-        </div>
+  <div class="ocorrencias-info">
 
-        <div class="lbl">
-          Alunos cadastrados
-        </div>
+    <h3>Ocorrências recentes</h3>
 
-      </div>
+    <div id="ocorrenciasRecentes">
 
-      <div class="stat-card">
-
-        <div
-          class="num"
-          id="home-oc"
-        >
-          0
-        </div>
-
-        <div class="lbl">
-          Ocorrências registradas
-        </div>
-
-      </div>
+      <p>Nenhuma ocorrência registrada.</p>
 
     </div>
 
-    <!-- GRÁFICO GERAL -->
-    <div class="chart-card">
+  </div>
 
-      <div class="page-title">
-        📊 Comparativo das Turmas
-      </div>
-
-      <div class="chart-wrap">
-        <canvas id="chartHome"></canvas>
-      </div>
+ </div>
 
     </div>
+  
+    <!-- ÁREA PRINCIPAL -->
+    <div class="dashboard-grid">
+  
+      <!-- AGENDA -->
+      <div class="agenda-card">
+  
+        <div class="card-header">
+  
+          <h3>📅 Agenda da Semana</h3>
+  
+        </div>
+  
+        <div class="agenda-item">
+  
+          <div class="agenda-date">
+            28<br>MAI
+          </div>
+  
+          <div>
+            <h4>Reunião da APM</h4>
+            <p>14:00 - 16:00</p>
+          </div>
+  
+        </div>
+  
+        <div class="agenda-item">
+  
+          <div class="agenda-date blue">
+            15<br>JUN
+          </div>
+  
+          <div>
+            <h4>Prova Paulista</h4>
+            <p>2º Bimestre</p>
+          </div>
+  
+        </div>
+  
+      </div>
+  
+      <!-- GRÁFICO -->
+      <div class="grafico-modern-card">
+  
+        <div class="grafico-header">
+  
+          <div class="grafico-title">
+            📊 Comparativo Geral das Turmas
+          </div>
+  
+        </div>
+  
+        <div class="grafico-area">
+          <canvas id="chartHome"></canvas>
+        </div>
+  
+      </div>
+  
+    </div>
+  
+    <!-- ACESSO RÁPIDO -->
+    <div class="quick-title">
+      Acesso Rápido
+    </div>
+  
+    <div class="quick-grid">
+  
+      <div class="quick-card">
+        📋
+        <span>Notas</span>
+      </div>
+  
+      <div class="quick-card">
+        📊
+        <span>Gráfico</span>
+      </div>
+  
+      <div class="quick-card">
+        ⚠️
+        <span>Ocorrências</span>
+      </div>
 
+      <div class="quick-card">
+        🎓
+        <span>Minhas Turmas</span>
+      </div>
+  
+    </div>
+  
   </div>
 
   <!-- NOTAS -->
@@ -281,6 +344,38 @@
             placeholder="Nome completo"
           >
 
+        </div>
+
+        <div class="form-group">
+
+          <label>
+            Série
+          </label>
+      
+          <select id="serie">
+      
+            <option value="">
+              Selecione
+            </option>
+      
+            <option value="3º Ano A">
+              3º Ano A
+            </option>
+      
+            <option value="2º Ano B">
+              2º Ano B
+            </option>
+      
+            <option value="1º Ano C">
+              1º Ano C
+            </option>
+      
+            <option value="9º Ano D">
+              9º Ano D
+            </option>
+      
+          </select>
+      
         </div>
 
         <div class="form-group">
@@ -321,6 +416,7 @@
           <tr>
             <th>#</th>
             <th>Nome</th>
+            <th>Série</th>
             <th>Nota</th>
             <th>Situação</th>
           </tr>
@@ -373,18 +469,85 @@
             id="alunoOc"
             placeholder="Nome do aluno"
           >
+        </div>
 
+        <div class="form-group">
+          <label>Série</label>
+      
+          <select id="serieOc">
+            <option value="">Selecione</option>
+            <option>3º Ano A</option>
+            <option>2º Ano B</option>
+            <option>1º Ano C</option>
+            <option>9º Ano D</option>
+          </select>
+        </div>
+      
+      </div>
+      
+      <div class="form-row-h">
+      
+        <div class="form-group">
+          <label>Tipo da ocorrência</label>
+      
+          <select id="tipoOc">
+      
+            <option value="">
+              Selecione
+            </option>
+      
+            <option>
+              Desacato ao professor
+            </option>
+      
+            <option>
+              Dormindo em sala
+            </option>
+      
+            <option>
+              Conversa excessiva
+            </option>
+      
+            <option>
+              Uso de celular
+            </option>
+      
+            <option>
+              Atraso
+            </option>
+      
+            <option>
+              Falta de uniforme
+            </option>
+      
+            <option>
+              Desrespeito a colega
+            </option>
+      
+            <option>
+              Desrespeito ao professor
+            </option>
+      
+            <option>
+              Linguagem inadequada
+            </option>
+      
+            <option>
+              Outro
+            </option>
+      
+          </select>
         </div>
 
         <div class="form-group">
 
           <label>
-            Descrição
+            Descrição (Opcional)
           </label>
 
           <input
             id="textoOc"
-            placeholder="Descreva o ocorrido..."
+            placeholder="Detalhes adicionais..."
           >
 
         </div>
@@ -605,7 +768,7 @@
 
         <div
           class="num"
-          id="mediaTurma"
+          id="mediaTurmaCard"
         >
           0
         </div>
@@ -656,7 +819,7 @@
     </div>
 
     <!-- GRÁFICO MODERNO -->
-<div class="grafico-modern-card">
+ <div class="grafico-modern-card">
 
   <div class="grafico-header">
 
@@ -750,6 +913,8 @@
   </div>
 
 </main>
+</div>
+
 
 <!-- JS -->
 <script src="js/app.js"></script>
