@@ -830,18 +830,57 @@
 }
 
 .ocorrencia-card{
+  background: #fff;
+  border-left: 5px solid #7c3aed;
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 15px;
+  display: flex;
   align-items:flex-start;
+  gap: 16px;
+  box-sizing:
+  0 6px 20px rgba(0,0,0,0.05);
+  transition: 0.3s;
+}
+
+.ocorrencia-card:hover{
+
+  transform:translateY(-4px);
+
+  box-shadow:
+  0 12px 30px rgba(0,0,0,0.08);
 }
 
 .ocorrencias-info{
   width:100%;
 }
 
+.ocorrencias-info strong{
+
+  display:block;
+
+  font-size:22px;
+
+  color:#111827;
+
+  margin-bottom:10px;
+}
+
+.ocorrencias-info p{
+
+  margin:6px 0;
+
+  color:#374151;
+
+  font-size:15px;
+}
+
 .oc-mini{
-  background:#f9fafb;
+  background:#f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius:12px;
-  padding:10px;
-  margin-top:10px;
+  padding: 12px;
+  margin-top:12px;
 }
 
 .oc-mini strong{
@@ -965,4 +1004,130 @@
   background:#fff;
   font-size:15px;
   cursor: pointer;
+}
+
+/* CARD DE OCORRÊNCIA */
+
+.oc-card{
+
+  background:#fff;
+
+  border-radius:20px;
+
+  padding:20px;
+
+  border-left:6px solid #7c3aed;
+
+  box-shadow:
+  0 6px 20px rgba(0,0,0,.06);
+
+  transition:.3s;
+}
+
+.oc-card:hover{
+
+  transform:translateY(-4px);
+
+  box-shadow:
+  0 12px 30px rgba(0,0,0,.10);
+}
+
+.oc-header{
+
+  display:flex;
+
+  gap:15px;
+
+  align-items:flex-start;
+}
+
+.oc-icon{
+
+  width:55px;
+
+  height:55px;
+
+  border-radius:14px;
+
+  background:#ede9fe;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  font-size:24px;
+
+  flex-shrink:0;
+}
+
+.oc-info{
+
+  flex:1;
+}
+
+.oc-info strong{
+
+  font-size:22px;
+
+  color:#111827;
+
+  display:block;
+
+  margin-bottom:10px;
+}
+
+.oc-tags{
+
+  display:flex;
+
+  gap:10px;
+
+  flex-wrap:wrap;
+}
+
+.tag-serie{
+
+  background:#dbeafe;
+
+  color:#1d4ed8;
+
+  padding:6px 12px;
+
+  border-radius:999px;
+
+  font-size:13px;
+
+  font-weight:600;
+}
+
+.tag-tipo{
+
+  background:#ede9fe;
+
+  color:#7c3aed;
+
+  padding:6px 12px;
+
+  border-radius:999px;
+
+  font-size:13px;
+
+  font-weight:600;
+}
+
+.oc-descricao{
+
+  margin-top:15px;
+
+  background:#f8fafc;
+
+  border:1px solid #e5e7eb;
+
+  border-radius:12px;
+
+  padding:12px;
+
+  color:#475569;
 }

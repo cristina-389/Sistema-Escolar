@@ -323,19 +323,29 @@ function addOc(){
   document.getElementById("alunoOc")
   .value.trim();
 
+  const serie = 
+  document.getElementById("serieOc")
+  .value;
+
+  const tipo =
+  document.getElementById("tipoOc")
+  .value;
+
   const texto =
   document.getElementById("textoOc")
   .value.trim();
 
-  if(!aluno || !texto){
+  if(!aluno || !serie || !tipo){
 
-    alert("Preencha tudo!");
+    alert("Preencha os campos obrigatórios!");
 
     return;
   }
 
   ocorrencias.push({
     aluno,
+    serie,
+    tipo,
     texto
   });
 
@@ -344,6 +354,8 @@ function addOc(){
   renderOc();
 
   document.getElementById("alunoOc").value = "";
+  document.getElementById("serieOc").value = "";
+  document.getElementById("tipoOc").value = "";
   document.getElementById("textoOc").value = "";
 }
 
@@ -362,9 +374,36 @@ function renderOc(){
     div.className = "oc-card";
 
     div.innerHTML = `
+  <div class="oc-header">
+
+    <div class="oc-icon">⚠️</div>
+
+    <div class="oc-info">
+
       <strong>${o.aluno}</strong>
-      <p>${o.texto}</p>
-    `;
+
+      <div class="oc-tags">
+
+        <span class="tag-serie">
+          ${o.serie}
+        </span>
+
+        <span class="tag-tipo">
+          ${o.tipo}
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  ${o.texto ? `
+    <div class="oc-descricao">
+      ${o.texto}
+    </div>
+  ` : ""}
+`;
 
     lista.appendChild(div);
 
