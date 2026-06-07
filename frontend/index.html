@@ -8,7 +8,7 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>Sistema Escolar</title>
+  <title>Ocorrência+</title>
 
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -195,13 +195,7 @@
         <p>Seja bem-vindo ao seu painel de controle.</p>
       </div>
   
-      <div class="top-actions">
-  
-        <div class="notif">
-          🔔
-        </div>
-  
-      </div>
+
   
     </div>
   
@@ -214,7 +208,6 @@
 
   <div class="ocorrencias-info">
 
-    <h3>Ocorrências recentes</h3>
 
     <div id="ocorrenciasRecentes">
 
@@ -228,64 +221,29 @@
 
     </div>
   
-    <!-- ÁREA PRINCIPAL -->
-    <div class="dashboard-grid">
-  
-      <!-- AGENDA -->
-      <div class="agenda-card">
-  
-        <div class="card-header">
-  
-          <h3>📅 Agenda da Semana</h3>
-  
-        </div>
-  
-        <div class="agenda-item">
-  
-          <div class="agenda-date">
-            28<br>MAI
-          </div>
-  
-          <div>
-            <h4>Reunião da APM</h4>
-            <p>14:00 - 16:00</p>
-          </div>
-  
-        </div>
-  
-        <div class="agenda-item">
-  
-          <div class="agenda-date blue">
-            15<br>JUN
-          </div>
-  
-          <div>
-            <h4>Prova Paulista</h4>
-            <p>2º Bimestre</p>
-          </div>
-  
-        </div>
-  
-      </div>
-  
-      <!-- GRÁFICO -->
-      <div class="grafico-modern-card">
-  
-        <div class="grafico-header">
-  
-          <div class="grafico-title">
-            📊 Comparativo Geral das Turmas
-          </div>
-  
-        </div>
-  
-        <div class="grafico-area">
-          <canvas id="chartHome"></canvas>
-        </div>
-  
-      </div>
-  
-    </div>
+    <!-- AGENDA -->
+<div class="agenda-card">
+
+  <div class="card-header">
+
+    <h3>📅 Agenda do Professor</h3>
+
+    <button
+      class="btn-agenda"
+      onclick="abrirAgenda()"
+    >
+      + Novo
+    </button>
+
+  </div>
+
+  <div id="listaAgenda">
+
+    <p>Nenhum compromisso cadastrado.</p>
+
+  </div>
+
+ </div>
   
     <!-- ACESSO RÁPIDO -->
     <div class="quick-title">
@@ -402,6 +360,18 @@
 
     </div>
 
+    <div class="form-group" style="margin-bottom:20px;">
+      <label>Filtrar turma</label>
+    
+      <select id="filtroTurma" onchange="renderAlunos()">
+        <option value="todos">Todas as turmas</option>
+        <option value="3º Ano A">3º Ano A</option>
+        <option value="2º Ano B">2º Ano B</option>
+        <option value="1º Ano C">1º Ano C</option>
+        <option value="9º Ano D">9º Ano D</option>
+      </select>
+    </div>
+
     <!-- TABELA -->
     <div class="table-card">
 
@@ -415,6 +385,7 @@
             <th>Série</th>
             <th>Nota</th>
             <th>Situação</th>
+            <th>Ações</th>
           </tr>
 
         </thead>
@@ -911,6 +882,54 @@
 </main>
 </div>
 
+<!-- MODAL DA AGENDA -->
+<div id="modalAgenda" class="modal">
+
+  <div class="modal-content">
+
+    <h2>Novo Compromisso</h2>
+
+    <input
+      type="date"
+      id="agendaData"
+    >
+
+    <select id="agendaTurma">
+
+      <option>3º Ano A</option>
+      <option>2º Ano B</option>
+      <option>1º Ano C</option>
+      <option>9º Ano D</option>
+
+    </select>
+
+    <input
+      type="text"
+      id="agendaTexto"
+      placeholder="Descrição"
+    >
+
+   <div class="modal-buttons">
+
+  <button
+    class="btn-salvar"
+    onclick="addAgenda()"
+  >
+    Salvar
+  </button>
+
+  <button
+    class="btn-cancelar"
+    onclick="fecharAgenda()"
+  >
+    Cancelar
+  </button>
+
+</div>
+
+  </div>
+
+</div>
 
 <!-- JS -->
 <script src="js/app.js"></script>

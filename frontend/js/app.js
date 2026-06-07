@@ -7,6 +7,11 @@ JSON.parse(localStorage.getItem("alunos")) || [];
 let ocorrencias =
 JSON.parse(localStorage.getItem("oc")) || [];
 
+let agenda =
+JSON.parse(
+  localStorage.getItem("agenda")
+) || [];
+
 let chartObj;
 
 /* LOGIN */
@@ -21,11 +26,16 @@ window.onload = function(){
     document.getElementById("app")
     .style.display = "block";
 
+    document.querySelector(".topbar")
+    .style.display = "flex";
+
     atualizarHome();
 
     renderAlunos();
 
     renderOc();
+
+    renderAgenda();
   } else{
 
     document.getElementById("app")
@@ -93,6 +103,19 @@ function irPara(id){
   .getElementById(id)
   .classList.add("ativa");
 
+  const topbar =
+document.querySelector(".topbar");
+
+if(id === "home"){
+
+  topbar.style.display = "flex";
+
+}else{
+
+  topbar.style.display = "none";
+
+}
+
   document
   .querySelectorAll(".nav-item")
   .forEach(n => n.classList.remove("active"));
@@ -121,15 +144,128 @@ function irPara(id){
 
 function atualizarHome(){
 
-  document.getElementById("home-total")
-  .textContent = alunos.length;
+  const total =
+  document.getElementById("home-total");
 
-  document.getElementById("home-oc")
-  .textContent = ocorrencias.length;
+  const oc =
+  document.getElementById("home-oc");
+
+  if(total){
+    total.textContent = alunos.length;
+  }
+
+  if(oc){
+    oc.textContent = ocorrencias.length;
+  }
 
 }
 
 /* ALUNOS */
+
+function editarAluno(indice){
+
+  const novaNota = prompt(
+    "Digite a nova nota:",
+    alunos[indice].nota
+  );
+
+  if(novaNota === null) return;
+
+  alunos[indice].nota =
+  parseFloat(novaNota);
+
+  salvar();
+
+  renderAlunos();
+
+}
+
+function excluirAluno(indice){
+    
+  if(
+    confirm(
+      "Deseja realmente excluir este aluno?"
+    )
+  ){
+
+    alunos.splice(indice,1);
+
+    salvar();
+
+    renderAlunos();
+
+  }
+
+}
+
+function renderAlunos(){
+
+  const tbody =
+  document.getElementById("tbody");
+
+  tbody.innerHTML = "";
+
+  const filtro =
+  document.getElementById("filtroTurma")?.value || "todos";
+
+  let lista = alunos;
+
+  if(filtro !== "todos"){
+    lista = alunos.filter(
+      aluno => aluno.serie === filtro
+    );
+  }
+
+  lista.forEach((a,i)=>{
+
+    const aprovado =
+    a.nota >= 6;
+
+    const tr =
+    document.createElement("tr");
+
+    tr.innerHTML = `
+    <td>${i+1}</td>
+  
+    <td>${a.nome}</td>
+  
+    <td>${a.serie || "-"}</td>
+  
+    <td>${a.nota}</td>
+  
+    <td class="${
+      aprovado
+      ? 'aprovado'
+      : 'reprovado'
+    }">
+      ${
+        aprovado
+        ? '✅ Aprovado'
+        : '❌ Reprovado'
+      }
+    </td>
+    <td>
+    <button
+      class="btn-editar"
+      onclick="editarAluno(${i})"
+    >
+      ✏️
+    </button>
+  
+    <button
+      class="btn-excluir"
+      onclick="excluirAluno(${i})"
+    >
+      🗑️
+    </button>
+  </td>
+    `;
+
+    tbody.appendChild(tr);
+
+  });
+
+}
 
 function addAluno(){
 
@@ -138,7 +274,7 @@ function addAluno(){
   .value.trim();
 
   const serie =
-  document.getElementById(serie)
+  document.getElementById("serie")
   .value;
 
   const nota =
@@ -166,42 +302,6 @@ function addAluno(){
   document.getElementById("nome").value = "";
   document.getElementById("serie").value = "";
   document.getElementById("nota").value = "";
-
-}
-
-function renderAlunos(){
-
-  const tbody =
-  document.getElementById("tbody");
-
-  tbody.innerHTML = "";
-
-  alunos.forEach((a,i)=>{
-
-    const aprovado = a.nota >= 6;
-
-    const tr =
-    document.createElement("tr");
-
-    tr.innerHTML = `
-      <td>${i+1}</td>
-
-      <td>${a.nome}</td>
-
-      <td>${a.serie || "-"}</td>
-
-      <td>${a.nota}</td>
-
-      <td>
-        ${aprovado ? "Aprovado" : "Reprovado"}
-      </td>
-    `;
-
-    tbody.appendChild(tr);
-
-  });
-
-  atualizarHome();
 
 }
 
@@ -346,7 +446,11 @@ function addOc(){
     aluno,
     serie,
     tipo,
-    texto
+    texto,
+
+    data:
+    new Date()
+    .toLocaleDateString("pt-BR")
   });
 
   salvar();
@@ -366,7 +470,7 @@ function renderOc(){
 
   lista.innerHTML = "";
 
-  ocorrencias.forEach(o=>{
+  ocorrencias.forEach((o,index)=>{
 
     const div =
     document.createElement("div");
@@ -374,36 +478,49 @@ function renderOc(){
     div.className = "oc-card";
 
     div.innerHTML = `
-  <div class="oc-header">
 
-    <div class="oc-icon">⚠️</div>
-
-    <div class="oc-info">
-
-      <strong>${o.aluno}</strong>
-
-      <div class="oc-tags">
-
-        <span class="tag-serie">
-          ${o.serie}
-        </span>
-
-        <span class="tag-tipo">
-          ${o.tipo}
-        </span>
-
+    <div class="oc-header">
+    
+      <div class="oc-icon">⚠️</div>
+    
+      <div class="oc-info">
+    
+        <strong>${o.aluno}</strong>
+    
+        <small>
+          📅 ${o.data}
+        </small>
+    
+        <div class="oc-tags">
+    
+          <span class="tag-serie">
+            ${o.serie}
+          </span>
+    
+          <span class="tag-tipo">
+            ${o.tipo}
+          </span>
+    
+        </div>
+    
       </div>
-
+    
     </div>
-
-  </div>
-
-  ${o.texto ? `
-    <div class="oc-descricao">
-      ${o.texto}
-    </div>
-  ` : ""}
-`;
+    
+    ${o.texto ? `
+      <div class="oc-descricao">
+        ${o.texto}
+      </div>
+    ` : ""}
+    
+    <button
+      class="btn-excluir"
+      onclick="excluirOc(${index})"
+    >
+      🗑️ Excluir
+    </button>
+    
+    `;
 
     lista.appendChild(div);
 
@@ -413,37 +530,35 @@ function renderOc(){
 
   // MOSTRAR ÚLTIMAS OCORRÊNCIAS
 
-const recentes =
-ocorrencias.slice(-3).reverse();
+ const box =
+ document.getElementById("ocorrenciasRecentes");
 
-const box =
-document.getElementById("ocorrenciasRecentes");
+ if(box){
 
-if(box){
+  box.innerHTML = `
+  <h2>${ocorrencias.length}</h2>
+  <p>Ocorrências registradas</p>
+ `;
 
-  box.innerHTML = "";
-
-  if(recentes.length === 0){
-
-    box.innerHTML =
-    "<p>Nenhuma ocorrência registrada.</p>";
-
-  } else {
-
-    recentes.forEach(o=>{
-
-      box.innerHTML += `
-        <div class="oc-mini">
-          <strong>${o.aluno}</strong>
-          <span>${o.texto}</span>
-        </div>
-      `;
-
-    });
-
-  }
+ }
 
 }
+
+function excluirOc(indice){
+
+  if(
+    confirm(
+      "Deseja excluir esta ocorrência?"
+    )
+  ){
+
+    ocorrencias.splice(indice,1);
+
+    salvar();
+
+    renderOc();
+
+  }
 
 }
 
@@ -460,6 +575,136 @@ function salvar(){
     "oc",
     JSON.stringify(ocorrencias)
   );
+
+  localStorage.setItem(
+    "agenda",
+    JSON.stringify(agenda)
+  );
+
+}
+
+function abrirAgenda(){
+
+  document
+    .getElementById("modalAgenda")
+    .style.display = "flex";
+
+}
+
+function fecharAgenda(){
+
+  document
+    .getElementById("modalAgenda")
+    .style.display = "none";
+
+}
+
+function addAgenda(){
+
+  const data =
+  document.getElementById("agendaData")
+  .value;
+
+  const dataFormatada =
+new Date(data + "T00:00:00")
+.toLocaleDateString("pt-BR");
+
+  const turma =
+  document.getElementById("agendaTurma")
+  .value;
+
+  const texto =
+  document.getElementById("agendaTexto")
+  .value.trim();
+
+  if(!data || !texto){
+
+    alert("Preencha os campos!");
+
+    return;
+
+  }
+
+  agenda.push({
+    data: dataFormatada,
+    turma,
+    texto
+  });
+
+  salvar();
+
+  renderAgenda();
+
+  fecharAgenda();
+
+}
+
+function renderAgenda(){
+
+  const lista =
+  document.getElementById("listaAgenda");
+
+  if(!lista) return;
+
+  lista.innerHTML = "";
+
+  if(agenda.length === 0){
+
+    lista.innerHTML =
+    "<p>Nenhum compromisso cadastrado.</p>";
+
+    return;
+
+  }
+
+  agenda.forEach((item, index) => {
+
+    lista.innerHTML += `
+  
+      <div class="agenda-item">
+  
+      <div class="agenda-info">
+
+      <div class="agenda-data">
+        📅 ${item.data}
+      </div>
+    
+      <div class="agenda-turma">
+        🎓 ${item.turma}
+      </div>
+    
+      <div class="agenda-texto">
+        ${item.texto}
+      </div>
+    
+    </div>
+  
+        <button
+          class="btn-excluir-agenda"
+          onclick="excluirAgenda(${index})"
+        >
+          🗑️
+        </button>
+  
+      </div>
+  
+    `;
+  
+  });
+
+}
+
+function excluirAgenda(indice){
+
+  if(confirm("Deseja excluir este compromisso?")){
+
+    agenda.splice(indice, 1);
+
+    salvar();
+
+    renderAgenda();
+
+  }
 
 }
 
@@ -578,141 +823,6 @@ const dadosTurmas = {
     renderGrafico(nomeTurma);
   
   }
-
-// =========================
-// GRÁFICO GERAL DAS TURMAS
-// =========================
-
-const ctxHome =
-document.getElementById("chartHome");
-
-if(ctxHome){
-
-  new Chart(ctxHome,{
-
-    type:"line",
-
-    data:{
-
-      labels:[
-        "1º Bimestre",
-        "2º Bimestre",
-        "3º Bimestre",
-        "4º Bimestre"
-      ],
-
-      datasets:[
-
-        {
-          label:"3º Ano A",
-
-          data:[7.5,8.2,8.0,9.0],
-
-          borderColor:"#ffffff",
-
-          backgroundColor:"rgba(255,255,255,0.2)",
-
-          tension:0.4,
-
-          fill:false,
-
-          pointRadius:4
-        },
-
-        {
-          label:"2º Ano B",
-
-          data:[6.8,7.1,7.4,7.9],
-
-          borderColor:"#c4b5fd",
-
-          tension:0.4,
-
-          fill:false,
-
-          pointRadius:4
-        },
-
-        {
-          label:"1º Ano C",
-
-          data:[5.9,6.8,7.0,7.3],
-
-          borderColor:"#ddd6fe",
-
-          tension:0.4,
-
-          fill:false,
-
-          pointRadius:4
-        },
-
-        {
-          label:"9º Ano D",
-
-          data:[7.2,8.0,8.5,9.1],
-
-          borderColor:"#a78bfa",
-
-          tension:0.4,
-
-          fill:false,
-
-          pointRadius:4
-        }
-
-      ]
-
-    },
-
-    options:{
-
-      responsive:true,
-
-      maintainAspectRatio:false,
-
-      plugins:{
-
-        legend:{
-          labels:{
-            color:"#fff"
-          }
-        }
-
-      },
-
-      scales:{
-
-        x:{
-          ticks:{
-            color:"#fff"
-          },
-
-          grid:{
-            display:false
-          }
-        },
-
-        y:{
-          min:0,
-          max:10,
-
-          ticks:{
-            color:"#fff"
-          },
-
-          grid:{
-            color:"rgba(255,255,255,0.1)"
-          }
-        }
-
-      }
-
-    }
-
-  });
-
-}
 
 // =========================
 // SEGUNDO GRÁFICO GERAL
