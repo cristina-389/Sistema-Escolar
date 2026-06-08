@@ -2,6 +2,7 @@
   "dependencies": {
     "cors": "^2.8.6",
     "express": "^5.2.1",
+    "firebase": "^12.14.0",
     "sqi": "^0.0.1",
     "sqlite3": "^6.0.1"
   }
